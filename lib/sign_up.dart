@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'colors.dart';
 
-class LoginPage extends StatefulWidget {
+class SignUpPage extends StatefulWidget {
   @override
-  _LoginPageState createState() => _LoginPageState();
+  _SignUpPageState createState() => _SignUpPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _SignUpPageState extends State<SignUpPage> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final TextEditingController _emailTextFieldController = TextEditingController();
   final TextEditingController _passwordTextFieldController = TextEditingController();
@@ -87,12 +87,6 @@ class _LoginPageState extends State<LoginPage> {
             },
           ),
         ),
-        InkWell(
-          child: Text('계정이 없으신가요?', style: TextStyle(color: Colors.grey.shade500, fontSize: 10.0),),
-          onTap: () {
-            Navigator.pushNamed(context, '/sign_up');
-          },
-        )
       ],
     );
   }

@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
 import 'login.dart';
+import 'colors.dart';
+import 'sign_up.dart';
+import 'sex.dart';
+import 'analyze.dart';
+import 'analyze_result.dart';
+import 'navigator.dart';
 
 class FaceTagApp extends StatelessWidget {
   @override
@@ -7,9 +13,15 @@ class FaceTagApp extends StatelessWidget {
     return MaterialApp(
       title: 'FaceTag',
       theme: _buildFaceTagTheme(),
+      home: LoginPage(),
       onGenerateRoute: _getRoute,
       routes: {
         '/login': (context) => LoginPage(),
+        '/sign_up': (context) => SignUpPage(),
+        '/choose_sex': (context) => ChooseSexPage(),
+        '/analyze': (context) => AnalyzePage(),
+        '/analyze_result': (context) => AnalyzeResultPage(),
+        '/navigator': (context) => NavigatorPage(),
       },
     );
   }
@@ -27,6 +39,7 @@ class FaceTagApp extends StatelessWidget {
 ThemeData _buildFaceTagTheme() {
   final ThemeData base = ThemeData.light();
   return base.copyWith(
-    accentColor: 
+    accentColor: faceTagPink,
+    primaryColor: faceTagPink,
   );
 }
