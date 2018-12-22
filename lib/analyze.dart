@@ -54,6 +54,9 @@ class _AnalyzePageState extends State<AnalyzePage> {
 
             InkWell(
               child: Text('더 알아보기' ,style: TextStyle(color: faceTagPink, fontSize: 10.0),),
+              onTap: () {
+                Navigator.pushNamed(context, '/tech_info');
+              },
             ),
             Icon(Icons.search, color: faceTagPink, size: 13.0,),
           ],

@@ -3,6 +3,7 @@ import 'setting.dart';
 import 'profile.dart';
 import 'chat_list.dart';
 import 'matching.dart';
+import 'colors.dart';
 
 
 class NavigatorPage extends StatefulWidget {
@@ -42,23 +43,34 @@ class _NavigatorPageState extends State<NavigatorPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: currentPage,
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: currentTab,
-        onTap: (int index) {
-          setState(() {
-            currentTab = index;
-            currentPage = pages[index];
-          });
-        },
-        items: [
-          BottomNavigationBarItem(icon: Icon(Icons.chat), title: Text("채팅", style: TextStyle(fontSize: 12.0))),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.favorite), title: Text("매칭", style: TextStyle(fontSize: 12.0))),
-          BottomNavigationBarItem(icon: Icon(Icons.person), title: Text("프로필", style: TextStyle(fontSize: 12.0))),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.settings), title: Text("설정", style: TextStyle(fontSize: 12.0))),
-        ],
-        type: BottomNavigationBarType.fixed,
+      bottomNavigationBar: Theme(
+        data: Theme.of(context).copyWith(
+          canvasColor: faceTagPink,
+          primaryColor: Colors.white,
+          textTheme: Theme
+              .of(context)
+              .textTheme
+              .copyWith(caption:TextStyle(color: faceTagPinkDark))
+        ),
+        child: BottomNavigationBar(
+
+          currentIndex: currentTab,
+          onTap: (int index) {
+            setState(() {
+              currentTab = index;
+              currentPage = pages[index];
+            });
+          },
+          items: [
+            BottomNavigationBarItem(icon: Icon(Icons.chat), title: Text("채팅", style: TextStyle(fontSize: 12.0))),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.favorite), title: Text("매칭", style: TextStyle(fontSize: 12.0))),
+            BottomNavigationBarItem(icon: Icon(Icons.person), title: Text("프로필", style: TextStyle(fontSize: 12.0))),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.settings), title: Text("설정", style: TextStyle(fontSize: 12.0))),
+          ],
+          type: BottomNavigationBarType.fixed,
+        ),
       ),
     );
   }

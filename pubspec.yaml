@@ -43,6 +43,10 @@ flutter:
     - images/logo.png
     - images/profile_default.png
     - images/login.png
+    - images/face_orange.png
+    - images/face_red.png
+    - images/face_purple.png
+    - images/labeling.png
 
 
   # To add assets to your application, add an assets section, like this:

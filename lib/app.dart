@@ -6,7 +6,7 @@ import 'sex.dart';
 import 'analyze.dart';
 import 'analyze_result.dart';
 import 'navigator.dart';
-
+import 'tech_info.dart';
 class FaceTagApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -22,6 +22,7 @@ class FaceTagApp extends StatelessWidget {
         '/analyze': (context) => AnalyzePage(),
         '/analyze_result': (context) => AnalyzeResultPage(),
         '/navigator': (context) => NavigatorPage(),
+        '/tech_info': (context) => TechInfoPage(),
       },
     );
   }
