@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:progress_hud/progress_hud.dart';
 import 'colors.dart';
 
 class LoginPage extends StatefulWidget {
@@ -14,19 +16,38 @@ class _LoginPageState extends State<LoginPage> {
 
   String email;
   String password;
+  ProgressHUD _progressHUD;
 
+
+  @override
+  void initState() {
+    super.initState();
+    _progressHUD = ProgressHUD(
+      backgroundColor: Colors.black12,
+      color: faceTagPink,
+      containerColor: Colors.white,
+      borderRadius: 5.0,
+      text: 'Loading...',
+      loading: false,
+    );
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: faceTagBackground,
-      body: ListView(
-        padding: EdgeInsets.symmetric(horizontal: 60.0),
+      body: Stack(
         children: <Widget>[
-          _buildLogoImageView(),
-          SizedBox(height: 50.0,),
-          _buildTextFieldGroup(),
-
+          ListView(
+            padding: EdgeInsets.symmetric(horizontal: 60.0),
+            children: <Widget>[
+              _buildLogoImageView(),
+              SizedBox(height: 50.0,),
+              _buildTextFieldGroup(),
+            ],
+          ),
+          _progressHUD,
         ],
+
       ),
     );
   }
@@ -66,6 +87,7 @@ class _LoginPageState extends State<LoginPage> {
           child: TextField(
             autofocus: true,
             controller: _passwordTextFieldController,
+            obscureText: true,
             decoration: InputDecoration(
               hintText: '비밀번호',
               focusedBorder: UnderlineInputBorder(borderSide: BorderSide.none),
@@ -83,7 +105,39 @@ class _LoginPageState extends State<LoginPage> {
               '로그인',style: TextStyle(color: Colors.white),
             ),
             onPressed: (){
-              Navigator.pushNamed(context, '/choose_sex');
+              _progressHUD.state.show();
+              var email = _emailTextFieldController.text;
+              var password = _passwordTextFieldController.text;
+              FocusScope.of(context).requestFocus(new FocusNode());
+              _signIn(email, password).then((FirebaseUser user) {
+                _progressHUD.state.dismiss();
+                print('success');
+                Navigator.pushNamedAndRemoveUntil(context, '/choose_sex', (Route r) => false);
+              }).catchError((error) {
+                if (error.toString().contains('17011')) {
+                  Fluttertoast.showToast(
+                      msg: "존재하지 않는 계정입니다.",
+                      toastLength: Toast.LENGTH_SHORT,
+                      gravity: ToastGravity.BOTTOM,
+                      timeInSecForIos: 1,
+                      backgroundColor: faceTagPinkDark,
+                      textColor: Colors.white
+                  );
+                } else {
+                  Fluttertoast.showToast(
+                      msg: "아이디 혹은 비밀번호를 확인하세요",
+                      toastLength: Toast.LENGTH_SHORT,
+                      gravity: ToastGravity.BOTTOM,
+                      timeInSecForIos: 1,
+                      backgroundColor: faceTagPinkDark,
+                      textColor: Colors.white
+                  );
+                }
+                _progressHUD.state.dismiss();
+
+                print('hi $error');
+              });
+
             },
           ),
         ),
@@ -97,10 +151,9 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Future<FirebaseUser> _gSignIn(String email, String password) async {
 
+  Future<FirebaseUser> _signIn(String email, String password) async {
     FirebaseUser user = await _auth.signInWithEmailAndPassword(email: email, password: password);
-
     return user;
   }
 }

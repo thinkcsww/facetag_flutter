@@ -1,6 +1,9 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'colors.dart';
+import 'package:progress_hud/progress_hud.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class SignUpPage extends StatefulWidget {
   @override
@@ -14,18 +17,37 @@ class _SignUpPageState extends State<SignUpPage> {
 
   String email;
   String password;
+  ProgressHUD _progressHUD;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _progressHUD = ProgressHUD(
+      backgroundColor: Colors.black12,
+      color: faceTagPink,
+      containerColor: Colors.white,
+      borderRadius: 5.0,
+      text: 'Loading...',
+      loading: false,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: faceTagBackground,
-      body: ListView(
-        padding: EdgeInsets.symmetric(horizontal: 60.0),
+      body: Stack(
         children: <Widget>[
-          _buildLogoImageView(),
-          SizedBox(height: 50.0,),
-          _buildTextFieldGroup(),
-
+          ListView(
+            padding: EdgeInsets.symmetric(horizontal: 60.0),
+            children: <Widget>[
+              _buildLogoImageView(),
+              SizedBox(height: 50.0,),
+              _buildTextFieldGroup(),
+            ],
+          ),
+          _progressHUD,
         ],
       ),
     );
@@ -66,6 +88,7 @@ class _SignUpPageState extends State<SignUpPage> {
           child: TextField(
             autofocus: true,
             controller: _passwordTextFieldController,
+            obscureText: true,
             decoration: InputDecoration(
               hintText: '비밀번호',
               focusedBorder: UnderlineInputBorder(borderSide: BorderSide.none),
@@ -80,20 +103,74 @@ class _SignUpPageState extends State<SignUpPage> {
           child: FlatButton(
             color: faceTagPink,
             child: Text(
-              '로그인',style: TextStyle(color: Colors.white),
+              '회원가입',style: TextStyle(color: Colors.white),
             ),
             onPressed: (){
-              Navigator.pushNamed(context, '/choose_sex');
+              var email = _emailTextFieldController.text;
+              var password = _passwordTextFieldController.text;
+              FocusScope.of(context).requestFocus(new FocusNode());
+              // Sign Up with Email and password
+              _progressHUD.state.show();
+              _signUp(email, password).then((FirebaseUser user) {
+                _progressHUD.state.dismiss();
+                alertDialog(context);
+              }).catchError((error) {
+
+                print(error);
+                if (error.toString().contains('17007')) {
+                  Fluttertoast.showToast(
+                      msg: "이미 사용중인 이메일입니다",
+                      toastLength: Toast.LENGTH_SHORT,
+                      gravity: ToastGravity.CENTER,
+                      timeInSecForIos: 1,
+                      backgroundColor: faceTagPinkDark,
+                      textColor: Colors.white
+                  );
+                } else {
+                  Fluttertoast.showToast(
+                      msg: "6자리 이상의 비밀번호를 사용해주세요",
+                      toastLength: Toast.LENGTH_SHORT,
+                      gravity: ToastGravity.CENTER,
+                      timeInSecForIos: 1,
+                      backgroundColor: faceTagPinkDark,
+                      textColor: Colors.white
+                  );
+                }
+
+                _progressHUD.state.dismiss();
+              });
             },
           ),
         ),
+
       ],
     );
   }
 
-  Future<FirebaseUser> _gSignIn(String email, String password) async {
+  void alertDialog(BuildContext context) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return CupertinoAlertDialog(
+            title: Text('알림'),
+            content: Text('회원가입이 완료되었습니다'),
+            actions: <Widget>[
+              CupertinoDialogAction(
+                child: Text('확인'),
+                onPressed: () {
+                  Navigator.pop(context);
+                  Navigator.pop(context);
+                },
+              ),
+            ],
+          );
+        });
+  }
 
-    FirebaseUser user = await _auth.signInWithEmailAndPassword(email: email, password: password);
+
+  Future<FirebaseUser> _signUp(String email, String password) async {
+
+    FirebaseUser user = await _auth.createUserWithEmailAndPassword(email: email, password: password);
 
     return user;
   }
