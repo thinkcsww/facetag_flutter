@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'login.dart';
-import 'colors.dart';
-import 'sign_up.dart';
-import 'sex.dart';
-import 'analyze.dart';
-import 'analyze_result.dart';
-import 'navigator.dart';
-import 'tech_info.dart';
+import 'package:facetag/screen/page_login.dart';
+import 'package:facetag/resource/colors.dart';
+import 'package:facetag/screen/page_sign_up.dart';
+import 'package:facetag/screen/page_choose_sex.dart';
+import 'package:facetag/screen/page_analyze_intro.dart';
+import 'package:facetag/screen/page_analyze_result.dart';
+import 'package:facetag/widgets/navigator.dart';
+import 'package:facetag/screen/page_tech_info.dart';
 class FaceTagApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {

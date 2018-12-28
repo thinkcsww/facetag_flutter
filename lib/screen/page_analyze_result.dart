@@ -1,60 +1,60 @@
 import 'package:flutter/material.dart';
-import 'colors.dart';
+import 'package:facetag/resource/colors.dart';
 
-class ProfilePage extends StatefulWidget {
+class AnalyzeResultPage extends StatefulWidget {
   @override
-  _ProfilePageState createState() => _ProfilePageState();
+  _AnalyzeResultPageState createState() => _AnalyzeResultPageState();
 }
 
-class _ProfilePageState extends State<ProfilePage> {
+class _AnalyzeResultPageState extends State<AnalyzeResultPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: faceTagBackground,
       body: ListView(
-        padding: const EdgeInsets.symmetric(horizontal: 20.0),
         children: <Widget>[
-          SizedBox(
-            height: 50.0,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+          Stack(
             children: <Widget>[
-              Text(
-                '프로필',
-                style:
-                    TextStyle(color: faceTagPink, fontWeight: FontWeight.bold),
-              ),
+              _buildImageView(),
+              _buildResultView(),
+              _buildChartView(),
             ],
           ),
-          SizedBox(
-            height: 20.0,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Image.asset(
-                'images/profile_default.png',
-                height: 70.0,
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 120.0),
+            child: RaisedButton(
+              elevation: 5.0,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(5.0)),
+              color: faceTagPink,
+              child: Text(
+                '시작하기',
+                style: TextStyle(color: Colors.white),
               ),
-            ],
-          ),
-          SizedBox(
-            height: 50.0,
-          ),
-          _buildResultView(),
-          SizedBox(
-            height: 20.0,
-          ),
-          _buildChartView()
+              onPressed: () {
+                Navigator.pushNamed(context, '/navigator');
+              },
+            ),
+          )
         ],
       ),
     );
   }
 
+  Widget _buildImageView() {
+    return ClipRRect(
+        borderRadius: BorderRadius.only(
+          bottomLeft: Radius.circular(20.0),
+          bottomRight: Radius.circular(20.0),
+        ),
+        child: Image.asset('images/login.png',
+            width: 600.0, height: 300.0, fit: BoxFit.fill));
+  }
+
   Widget _buildResultView() {
     return Container(
       padding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 20.0),
+      margin: const EdgeInsets.fromLTRB(20.0, 250.0, 20.0, 20.0),
       decoration: BoxDecoration(boxShadow: <BoxShadow>[
         BoxShadow(color: Colors.grey, offset: Offset(0.0, 6.0), blurRadius: 5.0)
       ], color: Colors.white, borderRadius: BorderRadius.circular(10.0)),
@@ -89,6 +89,7 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget _buildChartView() {
     return Container(
       padding: const EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 20.0),
+      margin: const EdgeInsets.fromLTRB(20.0, 365.0, 20.0, 20.0),
       decoration: BoxDecoration(boxShadow: <BoxShadow>[
         BoxShadow(color: Colors.grey, offset: Offset(0.0, 6.0), blurRadius: 5.0)
       ], color: Colors.white, borderRadius: BorderRadius.circular(10.0)),

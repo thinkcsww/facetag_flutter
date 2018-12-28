@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'setting.dart';
-import 'profile.dart';
-import 'chat_list.dart';
-import 'matching.dart';
-import 'colors.dart';
+import 'package:facetag/screen/page_setting.dart';
+import 'package:facetag/screen/page_profile.dart';
+import 'package:facetag/screen/page_chat_list.dart';
+import 'package:facetag/screen/page_match.dart';
+import 'package:facetag/resource/colors.dart';
 
 
 class NavigatorPage extends StatefulWidget {

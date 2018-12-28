@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'colors.dart';
+import 'package:facetag/resource/colors.dart';
 
 class MatchingPage extends StatefulWidget {
   @override

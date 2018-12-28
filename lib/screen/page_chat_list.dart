@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'colors.dart';
-import 'chat_room.dart';
+import 'package:facetag/resource/colors.dart';
+import 'page_chat_room.dart';
 
 class ChatListPage extends StatefulWidget {
   @override

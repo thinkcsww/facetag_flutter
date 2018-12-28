@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'colors.dart';
+import 'package:facetag/resource/colors.dart';
 import 'package:progress_hud/progress_hud.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 

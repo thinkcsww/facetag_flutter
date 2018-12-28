@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:progress_hud/progress_hud.dart';
-import 'colors.dart';
+import 'package:facetag/resource/colors.dart';
 
 class LoginPage extends StatefulWidget {
   @override
