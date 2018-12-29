@@ -14,24 +14,16 @@ class _SignUpPageState extends State<SignUpPage> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final TextEditingController _emailTextFieldController = TextEditingController();
   final TextEditingController _passwordTextFieldController = TextEditingController();
-
+  final _progressHUD = ProgressHUD(
+    backgroundColor: Colors.black12,
+    color: faceTagPink,
+    containerColor: Colors.white,
+    borderRadius: 5.0,
+    text: 'Loading...',
+    loading: false,
+  );
   String email;
   String password;
-  ProgressHUD _progressHUD;
-
-  @override
-  void initState() {
-    super.initState();
-
-    _progressHUD = ProgressHUD(
-      backgroundColor: Colors.black12,
-      color: faceTagPink,
-      containerColor: Colors.white,
-      borderRadius: 5.0,
-      text: 'Loading...',
-      loading: false,
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -136,7 +128,6 @@ class _SignUpPageState extends State<SignUpPage> {
                       textColor: Colors.white
                   );
                 }
-
                 _progressHUD.state.dismiss();
               });
             },
