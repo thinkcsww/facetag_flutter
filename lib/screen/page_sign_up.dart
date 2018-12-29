@@ -1,9 +1,9 @@
+import 'package:facetag/widgets/toast.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:facetag/resource/colors.dart';
 import 'package:progress_hud/progress_hud.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
 class SignUpPage extends StatefulWidget {
   @override
@@ -36,7 +36,9 @@ class _SignUpPageState extends State<SignUpPage> {
             children: <Widget>[
               _buildLogoImageView(),
               SizedBox(height: 50.0,),
-              _buildTextFieldGroup(),
+              Builder(builder: (BuildContext context) {
+	              return _buildTextFieldGroup(context);
+              })
             ],
           ),
           _progressHUD,
@@ -51,7 +53,7 @@ class _SignUpPageState extends State<SignUpPage> {
     );
   }
 
-  Widget _buildTextFieldGroup() {
+  Widget _buildTextFieldGroup(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -107,26 +109,10 @@ class _SignUpPageState extends State<SignUpPage> {
                 _progressHUD.state.dismiss();
                 alertDialog(context);
               }).catchError((error) {
-
-                print(error);
-                if (error.toString().contains('17007')) {
-                  Fluttertoast.showToast(
-                      msg: "이미 사용중인 이메일입니다",
-                      toastLength: Toast.LENGTH_SHORT,
-                      gravity: ToastGravity.CENTER,
-                      timeInSecForIos: 1,
-                      backgroundColor: faceTagPinkDark,
-                      textColor: Colors.white
-                  );
+                if (error.toString().contains('17011')) {
+	                showToast(context, "존재하지 않는 계정입니다.");
                 } else {
-                  Fluttertoast.showToast(
-                      msg: "6자리 이상의 비밀번호를 사용해주세요",
-                      toastLength: Toast.LENGTH_SHORT,
-                      gravity: ToastGravity.CENTER,
-                      timeInSecForIos: 1,
-                      backgroundColor: faceTagPinkDark,
-                      textColor: Colors.white
-                  );
+	                showToast(context, "아이디 혹은 비밀번호를 확인하세요");
                 }
                 _progressHUD.state.dismiss();
               });
