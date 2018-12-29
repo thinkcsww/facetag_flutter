@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:progress_hud/progress_hud.dart';
 import 'package:facetag/resource/colors.dart';
 import 'package:facetag/widgets/toast.dart';
+import 'package:facetag/widgets/progressBar.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -13,24 +13,11 @@ class _LoginPageState extends State<LoginPage> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final TextEditingController _emailTextFieldController = TextEditingController();
   final TextEditingController _passwordTextFieldController = TextEditingController();
+  final ProgressHUD _progressHUD = makeProgressBar("Loading...", faceTagPink);
 
   String email;
   String password;
-  ProgressHUD _progressHUD;
 
-
-  @override
-  void initState() {
-    super.initState();
-    _progressHUD = ProgressHUD(
-      backgroundColor: Colors.black12,
-      color: faceTagPink,
-      containerColor: Colors.white,
-      borderRadius: 5.0,
-      text: 'Loading...',
-      loading: false,
-    );
-  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(

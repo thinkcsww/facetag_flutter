@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:facetag/resource/colors.dart';
-import 'package:progress_hud/progress_hud.dart';
+import 'package:facetag/widgets/progressBar.dart';
 
 class SignUpPage extends StatefulWidget {
   @override
@@ -14,14 +14,8 @@ class _SignUpPageState extends State<SignUpPage> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final TextEditingController _emailTextFieldController = TextEditingController();
   final TextEditingController _passwordTextFieldController = TextEditingController();
-  final _progressHUD = ProgressHUD(
-    backgroundColor: Colors.black12,
-    color: faceTagPink,
-    containerColor: Colors.white,
-    borderRadius: 5.0,
-    text: 'Loading...',
-    loading: false,
-  );
+  final _progressHUD = makeProgressBar("Loading...", faceTagPink);
+
   String email;
   String password;
 
