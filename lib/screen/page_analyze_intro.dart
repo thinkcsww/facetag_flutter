@@ -13,28 +13,28 @@ class _AnalyzePageState extends State<AnalyzePage> {
       backgroundColor: faceTagBackground,
       body: ListView(
         children: <Widget>[
-          _buildImageView(),
-          SizedBox(height: 100.0,),
+          SizedBox(height: 200.0,),
           _buildExplanationView()
         ],
       ),
     );
   }
 
-  Widget _buildImageView() {
-    return GestureDetector(
-      onTap: (){
-        print('hi');
-      },
-      child: Padding(
-        padding: const EdgeInsets.only(top: 50.0),
-        child: Image.asset('images/profile_default.png', height: 100.0,),
-      ),
-    );
-  }
+//  Widget _buildImageView() {
+//    return GestureDetector(
+//      onTap: (){
+//        print('hi');
+//      },
+//      child: Padding(
+//        padding: const EdgeInsets.only(top: 50.0),
+//        child: Image.asset('images/profile_default.png', height: 100.0,),
+//      ),
+//    );
+//  }
 
   Widget _buildExplanationView() {
     return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         Text(
           '당신을 분석해드립니다.', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),
@@ -69,7 +69,7 @@ class _AnalyzePageState extends State<AnalyzePage> {
             color: faceTagPink,
             child: Text('분석하기', style: TextStyle(color: Colors.white),),
             onPressed: (){
-              Navigator.pushNamed(context, '/analyze_result');
+              Navigator.pushNamed(context, '/camera');
             },
           ),
         )

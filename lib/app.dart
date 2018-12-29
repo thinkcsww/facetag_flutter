@@ -7,6 +7,9 @@ import 'package:facetag/screen/page_analyze_intro.dart';
 import 'package:facetag/screen/page_analyze_result.dart';
 import 'package:facetag/widgets/navigator.dart';
 import 'package:facetag/screen/page_tech_info.dart';
+import 'package:facetag/screen/page_analyze_camera.dart';
+import 'package:facetag/screen/page_analyze_gallery.dart';
+
 class FaceTagApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -23,6 +26,8 @@ class FaceTagApp extends StatelessWidget {
         '/analyze_result': (context) => AnalyzeResultPage(),
         '/navigator': (context) => NavigatorPage(),
         '/tech_info': (context) => TechInfoPage(),
+        '/camera': (context) => CameraPage(),
+        '/gallery': (context) => GalleryPage()
       },
     );
   }

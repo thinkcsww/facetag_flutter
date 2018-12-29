@@ -102,9 +102,9 @@ class _LoginPageState extends State<LoginPage> {
                 Navigator.pushReplacementNamed(context, '/choose_sex');
               }).catchError((error) {
                 if (error.toString().contains('17011')) {
-	                showToast(context, "존재하지 않는 계정입니다.");
+	                toastWithBuilder(context, "존재하지 않는 계정입니다.");
                 } else {
-	                showToast(context, "아이디 혹은 비밀번호를 확인하세요");
+	                toastWithBuilder(context, "아이디 혹은 비밀번호를 확인하세요");
                 }
                 _progressHUD.state.dismiss();
               });
