@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:progress_hud/progress_hud.dart';
 import 'package:facetag/resource/colors.dart';
 
@@ -42,23 +41,24 @@ class _LoginPageState extends State<LoginPage> {
             children: <Widget>[
               _buildLogoImageView(),
               SizedBox(height: 50.0,),
-              _buildTextFieldGroup(),
+              Builder(builder: (BuildContext context) {
+                return _buildTextFieldGroup(context);
+              })
             ],
           ),
           _progressHUD,
         ],
-
       ),
     );
   }
   Widget _buildLogoImageView() {
     return Padding(
-      padding: const EdgeInsets.only(top: 50.0),
+      padding: const EdgeInsets.only(top: 80.0),
       child: Image.asset('images/logo.png', height: 100.0,),
     );
   }
 
-  Widget _buildTextFieldGroup() {
+  Widget _buildTextFieldGroup(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -74,7 +74,6 @@ class _LoginPageState extends State<LoginPage> {
               hintText: '이메일',
               focusedBorder: UnderlineInputBorder(borderSide: BorderSide.none),
               border: UnderlineInputBorder(borderSide: BorderSide.none),
-
             ),
           ),
         ),
@@ -101,6 +100,7 @@ class _LoginPageState extends State<LoginPage> {
           width: 500.0,
           child: FlatButton(
             color: faceTagPink,
+            padding: const EdgeInsets.all(10.0),
             child: Text(
               '로그인',style: TextStyle(color: Colors.white),
             ),
@@ -108,46 +108,39 @@ class _LoginPageState extends State<LoginPage> {
               _progressHUD.state.show();
               var email = _emailTextFieldController.text;
               var password = _passwordTextFieldController.text;
-              FocusScope.of(context).requestFocus(new FocusNode());
+              FocusScope.of(context).requestFocus(FocusNode());
               _signIn(email, password).then((FirebaseUser user) {
                 _progressHUD.state.dismiss();
-                print('success');
-                Navigator.pushNamedAndRemoveUntil(context, '/choose_sex', (Route r) => false);
+                Navigator.pushReplacementNamed(context, '/choose_sex');
               }).catchError((error) {
                 if (error.toString().contains('17011')) {
-                  Fluttertoast.showToast(
-                      msg: "존재하지 않는 계정입니다.",
-                      toastLength: Toast.LENGTH_SHORT,
-                      gravity: ToastGravity.BOTTOM,
-                      timeInSecForIos: 1,
-                      backgroundColor: faceTagPinkDark,
-                      textColor: Colors.white
-                  );
+	                _showToast(context, "존재하지 않는 계정입니다.");
                 } else {
-                  Fluttertoast.showToast(
-                      msg: "아이디 혹은 비밀번호를 확인하세요",
-                      toastLength: Toast.LENGTH_SHORT,
-                      gravity: ToastGravity.BOTTOM,
-                      timeInSecForIos: 1,
-                      backgroundColor: faceTagPinkDark,
-                      textColor: Colors.white
-                  );
+	                _showToast(context, "아이디 혹은 비밀번호를 확인하세요");
                 }
                 _progressHUD.state.dismiss();
-
-                print('hi $error');
               });
 
             },
           ),
         ),
         InkWell(
-          child: Text('계정이 없으신가요?', style: TextStyle(color: Colors.grey.shade500, fontSize: 10.0),),
+          child: Text('계정이 없으신가요?', style: TextStyle(color: Colors.grey, fontSize: 12.0),),
           onTap: () {
             Navigator.pushNamed(context, '/sign_up');
           },
         )
       ],
+    );
+  }
+
+  // Snackbar를 이용한 토스트구현
+  void _showToast(BuildContext context, String errorMessage) {
+  	Scaffold.of(context).showSnackBar(
+	    SnackBar(
+		    content: Text(errorMessage),
+		    duration: Duration(seconds: 1),
+	    )
     );
   }
 
