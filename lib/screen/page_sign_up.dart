@@ -2,8 +2,11 @@ import 'package:facetag/widgets/toast.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:facetag/resource/colors.dart';
-import 'package:facetag/widgets/progressBar.dart';
+import 'package:facetag/widgets/progress_bar.dart';
+import 'package:facetag/widgets/toast.dart';
+
 
 class SignUpPage extends StatefulWidget {
   @override
@@ -12,9 +15,12 @@ class SignUpPage extends StatefulWidget {
 
 class _SignUpPageState extends State<SignUpPage> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  final TextEditingController _emailTextFieldController = TextEditingController();
-  final TextEditingController _passwordTextFieldController = TextEditingController();
+  final TextEditingController _emailTextFieldController =
+      TextEditingController();
+  final TextEditingController _passwordTextFieldController =
+      TextEditingController();
   final _progressHUD = makeProgressBar("Loading...", faceTagPink);
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   String email;
   String password;
@@ -22,6 +28,7 @@ class _SignUpPageState extends State<SignUpPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       backgroundColor: faceTagBackground,
       body: Stack(
         children: <Widget>[
@@ -29,9 +36,11 @@ class _SignUpPageState extends State<SignUpPage> {
             padding: EdgeInsets.symmetric(horizontal: 60.0),
             children: <Widget>[
               _buildLogoImageView(),
-              SizedBox(height: 50.0,),
+              SizedBox(
+                height: 50.0,
+              ),
               Builder(builder: (BuildContext context) {
-	              return _buildTextFieldGroup(context);
+                return _buildTextFieldGroup(context);
               })
             ],
           ),
@@ -40,10 +49,14 @@ class _SignUpPageState extends State<SignUpPage> {
       ),
     );
   }
+
   Widget _buildLogoImageView() {
     return Padding(
       padding: const EdgeInsets.only(top: 50.0),
-      child: Image.asset('images/logo.png', height: 100.0,),
+      child: Image.asset(
+        'images/logo.png',
+        height: 100.0,
+      ),
     );
   }
 
@@ -63,11 +76,12 @@ class _SignUpPageState extends State<SignUpPage> {
               hintText: '이메일',
               focusedBorder: UnderlineInputBorder(borderSide: BorderSide.none),
               border: UnderlineInputBorder(borderSide: BorderSide.none),
-
             ),
           ),
         ),
-        SizedBox(height: 10.0,),
+        SizedBox(
+          height: 10.0,
+        ),
         Container(
           padding: const EdgeInsets.only(left: 8.0),
           decoration: BoxDecoration(
@@ -81,19 +95,21 @@ class _SignUpPageState extends State<SignUpPage> {
               hintText: '비밀번호',
               focusedBorder: UnderlineInputBorder(borderSide: BorderSide.none),
               border: UnderlineInputBorder(borderSide: BorderSide.none),
-
             ),
           ),
         ),
-        SizedBox(height: 5.0,),
+        SizedBox(
+          height: 5.0,
+        ),
         Container(
           width: 500.0,
           child: FlatButton(
             color: faceTagPink,
             child: Text(
-              '회원가입',style: TextStyle(color: Colors.white),
+              '회원가입',
+              style: TextStyle(color: Colors.white),
             ),
-            onPressed: (){
+            onPressed: () {
               var email = _emailTextFieldController.text;
               var password = _passwordTextFieldController.text;
               FocusScope.of(context).requestFocus(new FocusNode());
@@ -101,19 +117,19 @@ class _SignUpPageState extends State<SignUpPage> {
               _progressHUD.state.show();
               _signUp(email, password).then((FirebaseUser user) {
                 _progressHUD.state.dismiss();
-                alertDialog(context);
+                _initializeDB(user.uid, email).then((_) => alertDialog(context))
+                .catchError((error) => toastWithKey(_scaffoldKey, error));
               }).catchError((error) {
                 if (error.toString().contains('17011')) {
-	                toastWithBuilder(context, "존재하지 않는 계정입니다.");
+                  toastWithBuilder(context, "존재하지 않는 계정입니다.");
                 } else {
-	                toastWithBuilder(context, "아이디 혹은 비밀번호를 확인하세요");
+                  toastWithBuilder(context, "아이디 혹은 비밀번호를 확인하세요");
                 }
                 _progressHUD.state.dismiss();
               });
             },
           ),
         ),
-
       ],
     );
   }
@@ -138,11 +154,16 @@ class _SignUpPageState extends State<SignUpPage> {
         });
   }
 
-
   Future<FirebaseUser> _signUp(String email, String password) async {
-
-    FirebaseUser user = await _auth.createUserWithEmailAndPassword(email: email, password: password);
-
+    FirebaseUser user = await _auth.createUserWithEmailAndPassword(
+        email: email, password: password);
     return user;
+  }
+  
+  Future<void> _initializeDB(String uid, String email) async {
+    final DocumentReference ref = Firestore.instance.collection('User').document(uid);
+    Firestore.instance.runTransaction((Transaction tx) async{
+      await tx.set(ref, <String,dynamic>{'email': email, 'sex': '', 'age': ''});
+    });
   }
 }

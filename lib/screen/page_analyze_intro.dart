@@ -20,18 +20,6 @@ class _AnalyzePageState extends State<AnalyzePage> {
     );
   }
 
-//  Widget _buildImageView() {
-//    return GestureDetector(
-//      onTap: (){
-//        print('hi');
-//      },
-//      child: Padding(
-//        padding: const EdgeInsets.only(top: 50.0),
-//        child: Image.asset('images/profile_default.png', height: 100.0,),
-//      ),
-//    );
-//  }
-
   Widget _buildExplanationView() {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -69,7 +57,7 @@ class _AnalyzePageState extends State<AnalyzePage> {
             color: faceTagPink,
             child: Text('분석하기', style: TextStyle(color: Colors.white),),
             onPressed: (){
-              Navigator.pushNamed(context, '/camera');
+              Navigator.pushReplacementNamed(context, '/camera');
             },
           ),
         )

@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:async';
 
+import 'package:facetag/screen/page_analyze_gallery.dart';
 import 'package:facetag/widgets/toast.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -75,7 +76,11 @@ class _CameraPageState extends State<CameraPage> {
               child: Text('확인'),
               onPressed: () {
                 Navigator.pop(context);
-                Navigator.pushNamed(context, '/gallery');
+                var route = MaterialPageRoute(
+                  builder: (BuildContext context) =>
+                      GalleryPage(image: _realImageFile)
+                );
+                Navigator.of(context).pushReplacement(route);
               },
             ),
             CupertinoDialogAction(

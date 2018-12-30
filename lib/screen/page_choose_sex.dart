@@ -1,16 +1,31 @@
+import 'package:facetag/widgets/toast.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:facetag/resource/colors.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class ChooseSexPage extends StatefulWidget {
+
   @override
   _ChooseSexPageState createState() => _ChooseSexPageState();
 }
 
 class _ChooseSexPageState extends State<ChooseSexPage> {
+
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  String uid;
+
+  _ChooseSexPageState() {
+    FirebaseAuth.instance.currentUser().then((user){
+      uid = user.uid;
+    }).catchError((e) => print(e));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       backgroundColor: faceTagBackground,
       body: ListView(
         padding: const EdgeInsets.symmetric(horizontal: 30.0),
@@ -48,25 +63,28 @@ class _ChooseSexPageState extends State<ChooseSexPage> {
     return Row(
       children: <Widget>[
         GestureDetector(
-          onTap: (){
-            _doubleCheckDialog();
-          },
+          onTap: () => _doubleCheckDialog('m'),
           child: Padding(
             padding: const EdgeInsets.only(right: 30.0),
             child: Image.asset('images/men.png'),
           ),
         ),
         GestureDetector(
-          onTap: (){
-
-          },
+          onTap: () => _doubleCheckDialog('w'),
           child: Image.asset('images/women.png'),
         )
       ],
     );
   }
 
-  void _doubleCheckDialog() {
+  Future<void> _sexTransaction(String sex) async {
+    final DocumentReference ref = Firestore.instance.collection("User").document(uid);
+    Firestore.instance.runTransaction((tx) async{
+      await tx.update(ref, <String,dynamic>{'sex': sex});
+    });
+  }
+
+  void _doubleCheckDialog(String sex) {
     showDialog(
         context: context,
       builder: (BuildContext context) {
@@ -77,8 +95,10 @@ class _ChooseSexPageState extends State<ChooseSexPage> {
             CupertinoDialogAction(
               child: Text('확인'),
               onPressed: () {
-                Navigator.pop(context);
-                Navigator.pushReplacementNamed(context, '/analyze');
+                _sexTransaction(sex).then((_){
+                  Navigator.pop(context);
+                  Navigator.pushReplacementNamed(context, '/analyze');
+                }).catchError((e) => toastWithKey(_scaffoldKey,'에러발생!'));
               },
             ),
             CupertinoDialogAction(
